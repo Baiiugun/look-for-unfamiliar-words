@@ -84,7 +84,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
 <div id="loginView" style="display:none">
   <form class="login" id="loginForm">
     <h2>标记单词结果 · 老师登录</h2>
-    <p>查看学生在真题网页上标记、提交的生词。</p>
+    <p>查看学生在 Look for unfamiliar words 页面上标记、提交的生词。</p>
     <label for="email">邮箱</label>
     <input id="email" type="email" autocomplete="username" required>
     <label for="pw">密码</label>
@@ -96,7 +96,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
 
 <div id="mainView" style="display:none">
   <header><div class="in">
-    <h1>标记单词结果<small>考研英语二</small></h1>
+    <h1>标记单词结果<small>Look for unfamiliar words</small></h1>
     <span class="stamp" id="stamp"></span>
     <button class="btn" id="reloadBtn">刷新</button>
     <button class="btn" id="logoutBtn">退出登录</button>
@@ -104,7 +104,8 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   <div class="wrap">
     <div class="filters">
       <select id="fStu"><option value="">全部学生</option></select>
-      <select id="fYear"><option value="">全部年份</option></select>
+      <select id="fTask"><option value="">全部考试 / 文本</option></select>
+      <select id="fYear"><option value="">全部试卷</option></select>
       <label><input type="checkbox" id="fLatest" checked> 每人每套只看最新一份</label>
       <span class="summary" id="summary"></span>
     </div>
@@ -118,7 +119,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
 (function(){
   var SB_URL = 'https://br-cute-tahr-8eff7472.supabase.aidap-global.cn-beijing.volces.com';
   var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1wbGF0Zm9ybSIsInJvbGUiOiJhbm9uIiwiZXhwIjozNjg2OTI1NzYzfQ.y45vSsbxFjV9k-psYujSR2YMtDOeZW_IDZS6eBlbRFc';
-  var TASK = '考研英语二-标生词';
+  var TASK_SUFFIX = '标生词';
   var TEACHER_EMAIL = 'baiyuguang@gmail.com';
   var RT_KEY = 'kyvocab_rt', SEEN_KEY = 'kyvocab_seen';
 
@@ -186,8 +187,8 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
 
   async function load(quiet){
     try{
-      rows = await api('submissions?select=id,student_name,set_num,status,answers,grading,updated_at' +
-        '&task_type=eq.' + encodeURIComponent(TASK) + '&order=updated_at.desc&limit=2000') || [];
+      rows = await api('submissions?select=id,student_name,task_type,set_num,status,answers,grading,updated_at' +
+        '&task_type=like.*' + encodeURIComponent(TASK_SUFFIX) + '&order=updated_at.desc&limit=2000') || [];
       $('stamp').textContent = '更新于 ' + new Date().toTimeString().slice(0,5) + ' · 每 30 秒自动刷新';
       render();
     }catch(e){
@@ -201,13 +202,14 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   function files(r){ return (r.grading && r.grading.files) || {}; }
 
   function visible(){
-    var stu = $('fStu').value, yr = $('fYear').value, latest = $('fLatest').checked;
+    var stu = $('fStu').value, task = $('fTask').value, yr = $('fYear').value, latest = $('fLatest').checked;
     var seen = new Set();
     return rows.filter(function(r){
       if(stu && r.student_name !== stu) return false;
+      if(task && r.task_type !== task) return false;
       if(yr && String(r.set_num) !== yr) return false;
       if(latest){
-        var k = r.student_name + '|' + r.set_num;
+        var k = r.student_name + '|' + r.task_type + '|' + r.set_num;
         if(seen.has(k)) return false;
         seen.add(k);
       }
@@ -224,7 +226,8 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
 
   function render(){
     fillSelect($('fStu'), Array.from(new Set(rows.map(function(r){ return r.student_name; }))).sort(), '全部学生');
-    fillSelect($('fYear'), Array.from(new Set(rows.map(function(r){ return r.set_num; }))).sort(function(a,b){ return b-a; }), '全部年份');
+    fillSelect($('fTask'), Array.from(new Set(rows.map(function(r){ return r.task_type; }))).sort(), '全部考试 / 文本');
+    fillSelect($('fYear'), Array.from(new Set(rows.map(function(r){ return r.set_num; }))).sort(function(a,b){ return b-a; }), '全部试卷');
     var list = visible();
     var newCount = rows.filter(function(r){ return seenAt && r.updated_at > seenAt; }).length;
     document.title = (newCount ? '(' + newCount + ' 新) ' : '') + '标记单词结果 · 老师登录版本';
@@ -233,22 +236,22 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
     // 同一学生同一套卷子交了几次、这是第几次
     var counts = {}, order = {};
     rows.slice().reverse().forEach(function(r){
-      var k = r.student_name + '|' + r.set_num;
+      var k = r.student_name + '|' + r.task_type + '|' + r.set_num;
       counts[k] = (counts[k] || 0) + 1; order[r.id] = counts[k];
     });
 
     if(!list.length){
-      $('list').innerHTML = '<div class="empty">' + (rows.length ? '没有符合筛选条件的记录' : '还没有学生提交。学生在真题网页上点「提交」→「发送给老师」后，会出现在这里。') + '</div>';
+      $('list').innerHTML = '<div class="empty">' + (rows.length ? '没有符合筛选条件的记录' : '还没有学生提交。学生在试卷页面上点「提交」→「发送给老师」后，会出现在这里。') + '</div>';
       return;
     }
     $('list').innerHTML = list.map(function(r){
-      var its = items(r), f = files(r), k = r.student_name + '|' + r.set_num;
+      var its = items(r), f = files(r), k = r.student_name + '|' + r.task_type + '|' + r.set_num;
       var isNew = seenAt && r.updated_at > seenAt;
       var nth = counts[k] > 1 ? '<span class="chip old">第 ' + order[r.id] + '/' + counts[k] + ' 次提交</span>' : '';
       var link = function(url, text){ return url ? '<a class="btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + text + '</a>' : '<a class="btn off" title="第四步自动查词接通后才会有">' + text + '（待生成）</a>'; };
       return '<div class="card' + (openIds.has(r.id) ? ' open' : '') + '" data-id="' + esc(r.id) + '">' +
         '<div class="row">' +
-          '<div class="who"><b>' + esc(r.student_name) + '</b><span class="chip year">' + esc(r.set_num) + '</span>' +
+          '<div class="who"><b>' + esc(r.student_name) + '</b><span class="chip year">' + esc(r.task_type) + ' · ' + esc(r.set_num) + '</span>' +
             (isNew ? '<span class="chip new">新</span>' : '') + nth +
             '<div class="meta">' + fmt(r.updated_at) + ' 提交</div></div>' +
           '<div class="n">' + its.length + ' <small>条</small></div>' +
@@ -307,14 +310,14 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
     else if(act === 'txt'){ download(r.student_name + '-' + r.set_num + '.txt', txtOf(r)); }
     else if(act === 'md'){ toast(await copy(mdOf(r)) ? '已复制 Markdown 表格，可以直接粘贴进飞书' : '复制失败，请换 Chrome/Edge 再试'); }
     else if(act === 'del'){
-      if(!confirm('确定删除 ' + r.student_name + ' 的 ' + r.set_num + ' 年这份提交吗？删除后无法恢复。')) return;
+      if(!confirm('确定删除 ' + r.student_name + ' 的 ' + r.task_type + ' · ' + r.set_num + ' 这份提交吗？删除后无法恢复。')) return;
       try{
         await api('submissions?id=eq.' + encodeURIComponent(id), { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
         rows = rows.filter(function(x){ return x.id !== id; }); render(); toast('已删除');
       }catch(err){ toast('删除失败：' + err.message); }
     }
   });
-  ['fStu','fYear','fLatest'].forEach(function(id){ $(id).addEventListener('change', render); });
+  ['fStu','fTask','fYear','fLatest'].forEach(function(id){ $(id).addEventListener('change', render); });
   $('reloadBtn').onclick = function(){ load(false); };
 
   // 离开页面时记下"已看到这里"，下次打开时之后新交的会标「新」
