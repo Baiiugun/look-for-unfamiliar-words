@@ -40,7 +40,7 @@ const catalog = {"site_title": "Look for unfamiliar words", "exams": [{"id": "ga
 const $ = id => document.getElementById(id);
 function toast(text){ const el=$('toast'); el.textContent=text; el.style.display='block'; clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.style.display='none',2200); }
 function esc(text){ return String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function validStudentId(value){ return /^[A-Z]{2,10}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/.test(value); }
+function validStudentId(value){ return /^[A-Z]{2,10}(?:(?:0[13578]|1[02])(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)(?:0[1-9]|[12]\d|30)|02(?:0[1-9]|1\d|2[0-9]))$/.test(value); }
 function currentExam(){ return catalog.exams.find(item => item.id === $('exam').value); }
 function currentPaper(){ const exam=currentExam(); return exam && (exam.papers || []).find(item => item.file === $('paper').value); }
 function updateButton(){ const id=$('studentId').value.trim(), paper=currentPaper(); const valid=validStudentId(id); $('studentHint').className='hint' + (id && !valid ? ' warn' : ''); $('studentHint').textContent=id && !valid ? '请输入如 LXM0920 的识别码：缩写必须大写，生日为四位 MMDD。' : '格式：2–10 位大写拼音缩写 + 有效月日。'; $('go').disabled=!(paper && valid); }
