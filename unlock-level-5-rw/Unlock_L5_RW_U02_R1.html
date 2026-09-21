@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Unlock Level 5 Reading and Writing vocabulary marking page.">
+  <title>Unlock_L5_RW_U02_R1</title>
+  <style>
+    :root {
+      --paper:#f4f5f8; --panel:#ffffff; --ink:#181c24; --muted:#5c6470; --border:#dfe3ea;
+      --mark-bg:#fff1a8; --mark-ink:#181c24; --preview-bg:#dbeafe; --accent:#0a7f8c;
+      --accent-bg:#e2f5f6; --accent-ink:#065c66; --danger:#c8391f;
+      --sans:-apple-system,'Segoe UI','Microsoft YaHei',sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html,body { margin:0; font:17px/1.85 var(--sans); color:var(--ink); background:var(--paper); }
+    body { padding:0 16px 100px; }
+    button,input { font:inherit; } button { cursor:pointer; }
+    .gate { position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(24,28,36,.55); }
+    .gate[hidden] { display:none; }
+    .gate-card { width:min(340px,100%); padding:24px 22px; border-radius:16px; background:var(--panel); box-shadow:0 18px 45px rgba(0,0,0,.24); }
+    .gate h1 { margin:0 0 8px; font-size:20px; }
+    .gate p { margin:0 0 16px; color:var(--muted); font-size:14px; line-height:1.7; }
+    .gate input { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:9px; font-size:16px; letter-spacing:.08em; text-transform:uppercase; }
+    .gate input:focus { outline:3px solid #b9e4e7; border-color:var(--accent); }
+    .error { min-height:22px; margin:6px 0 0; color:var(--danger); font-size:13px; }
+    .btn { border:1px solid var(--border); border-radius:9px; padding:8px 13px; background:var(--panel); color:var(--ink); font-size:14px; font-weight:600; }
+    .btn:hover { border-color:#aeb8c5; } .btn:disabled { cursor:not-allowed; opacity:.48; }
+    .btn.primary { border-color:var(--accent); background:var(--accent); color:white; }
+    .gate .primary { width:100%; }
+    .topbar { position:sticky; top:0; z-index:20; margin:0 -16px; padding:8px 16px; border-bottom:1px solid var(--border); background:rgba(244,245,248,.96); backdrop-filter:blur(10px); }
+    .row { display:flex; align-items:center; justify-content:space-between; gap:8px; } .row + .row { margin-top:6px; }
+    .examtag { overflow:hidden; font-size:14px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
+    .who,.cnt { color:var(--muted); font-size:13px; white-space:nowrap; }
+    .who button { margin-left:6px; padding:2px 5px; border:0; background:transparent; color:var(--accent); font-size:13px; font-weight:600; }
+    .actions { display:flex; gap:6px; } .actions .btn { padding:6px 10px; }
+    .wrap { max-width:760px; margin:0 auto; }
+    .hero { padding:22px 0 0; } .hero h1 { margin:0 0 3px; font-size:19px; line-height:1.35; } .hero p { margin:0; color:var(--muted); font-size:14px; }
+    .tip { margin:12px 0 18px; padding:10px 13px; border-radius:10px; background:var(--accent-bg); color:var(--accent-ink); font-size:13.5px; line-height:1.6; }
+    .tip ol { margin:0; padding-left:20px; }
+    .section-title { margin:30px 0 0; padding-top:16px; border-top:2px solid var(--ink); font-size:16px; }
+    .part-title { margin:3px 0 12px; color:var(--muted); font-size:15px; }
+    #content { user-select:none; -webkit-user-select:none; }
+    #content p { margin:0 0 15px; text-align:left; } .article-title { margin:0 0 17px; font-size:15.5px; line-height:1.45; }
+    .w { cursor:pointer; border-radius:4px; padding:0 2px; -webkit-touch-callout:none; user-select:none; -webkit-user-select:none; }
+    .w.m { background:var(--mark-bg); color:var(--mark-ink); box-shadow:0 0 0 1px #e8c847 inset; font-weight:700; }
+    .w.preview { background:var(--preview-bg); }
+    .panel { position:fixed; right:0; bottom:0; left:0; z-index:30; max-height:min(52vh,520px); overflow:auto; border-top:1px solid var(--border); background:var(--panel); box-shadow:0 -9px 28px rgba(24,28,36,.14); }
+    .panel[hidden] { display:none; } .panel-inner { max-width:760px; margin:auto; padding:12px 16px 18px; }
+    .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; } .panel h2 { margin:0; font-size:16px; }
+    .close { border:0; background:transparent; color:var(--muted); font-size:14px; } .preview-list { margin:9px 0 12px; padding-left:24px; }
+    .preview-list li { margin:3px 0; } .panel-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; } .status { color:var(--muted); font-size:13px; }
+    @media (max-width:480px) { body { padding-inline:12px; } .topbar { margin-inline:-12px; padding-inline:12px; } .row:first-child { align-items:flex-start; } .examtag { max-width:65vw; } .actions .btn { padding:6px 8px; } #content { font-size:17px; } .panel-inner { padding-inline:12px; } }
+  </style>
+</head>
+<body>
+  <div class="gate" id="gate" aria-modal="true" role="dialog">
+    <div class="gate-card">
+      <h1>开始标记生词</h1>
+      <p>只填姓名拼音首字母，不留空格。<br><br>例如李晓明填写 <b>LXM</b>。<br><br>确认开始时，系统会自动加上当天日期：若当天为 9 月 20 日，编号即为 <b>LXM0920</b>。</p>
+      <input id="initials" maxlength="8" autocomplete="off" inputmode="latin" placeholder="例如：LXM" aria-label="姓名拼音首字母">
+      <div class="error" id="gateError" aria-live="polite"></div>
+      <button class="btn primary" id="startBtn" disabled>开始标记</button>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="row"><div class="examtag" id="examTag">Unlock_L5_RW_U02_R1</div><div class="who" id="who"></div></div>
+    <div class="row"><div class="cnt" id="cnt">已标记 0 处</div><div class="actions"><button class="btn" id="undoBtn">撤销</button><button class="btn" id="clearBtn">清空</button><button class="btn primary" id="submitBtn">提交</button></div></div>
+  </div>
+
+  <main class="wrap">
+    <section class="hero"><h1>Unlock Level 5 R&amp;W · Unit 02 · Reading 1</h1><p>阅读文章查词与词组标记页面</p></section>
+    <section class="tip"><ol><li>短按一个英文词，可标记或取消标记。</li><li>按住约半秒后拖动，可连续选择词组。</li><li>点击“撤销”可取消最后一次有效标记；长按可连续撤销。</li><li>“清空”会删除本页当前学生的全部标记。</li><li>点击“提交”可预览并复制你的生词/短语列表。</li></ol></section>
+    <section id="content">
+      <h2 class="section-title">Unit 02 · Design</h2>
+      <div class="part-title">Reading 1</div>
+      <p><span class="w" data-id="1">Chapter</span> 5: <span class="w" data-id="2">What</span> <span class="w" data-id="3">makes</span> <span class="w" data-id="4">a</span> <span class="w" data-id="5">successful</span> <span class="w" data-id="6">logo</span>?</p>
+<p>1 <span class="w" data-id="7">A</span> <span class="w" data-id="8">logo</span> <span class="w" data-id="9">is</span> <span class="w" data-id="10">an</span> <span class="w" data-id="11">efficient</span> <span class="w" data-id="12">visual</span> <span class="w" data-id="13">form</span> <span class="w" data-id="14">that</span> <span class="w" data-id="15">conveys</span> <span class="w" data-id="16">an</span> <span class="w" data-id="17">organization’s</span> <span class="w" data-id="18">message</span>. <span class="w" data-id="19">Logos</span> <span class="w" data-id="20">may</span> <span class="w" data-id="21">seem</span> <span class="w" data-id="22">quite</span> <span class="w" data-id="23">simple</span>. <span class="w" data-id="24">After</span> <span class="w" data-id="25">all</span>, <span class="w" data-id="26">they</span> <span class="w" data-id="27">are</span> <span class="w" data-id="28">often</span> <span class="w" data-id="29">just</span> <span class="w" data-id="30">a</span> <span class="w" data-id="31">name</span> <span class="w" data-id="32">or</span> <span class="w" data-id="33">very</span> <span class="w" data-id="34">basic</span> <span class="w" data-id="35">image</span>, <span class="w" data-id="36">but</span> <span class="w" data-id="37">in</span> <span class="w" data-id="38">fact</span>, <span class="w" data-id="39">designing</span> <span class="w" data-id="40">a</span> <span class="w" data-id="41">good</span> <span class="w" data-id="42">logo</span> <span class="w" data-id="43">takes</span> <span class="w" data-id="44">a</span> <span class="w" data-id="45">lot</span> <span class="w" data-id="46">of</span> <span class="w" data-id="47">time</span> <span class="w" data-id="48">and</span> <span class="w" data-id="49">thought</span>. <span class="w" data-id="50">So</span>, <span class="w" data-id="51">what</span> <span class="w" data-id="52">are</span> <span class="w" data-id="53">the</span> <span class="w" data-id="54">criteria</span> <span class="w" data-id="55">that</span> <span class="w" data-id="56">define</span> <span class="w" data-id="57">a</span> <span class="w" data-id="58">good</span> <span class="w" data-id="59">logo</span>? <span class="w" data-id="60">If</span> <span class="w" data-id="61">you</span> <span class="w" data-id="62">ask</span> <span class="w" data-id="63">ten</span> <span class="w" data-id="64">different</span> <span class="w" data-id="65">graphic</span> <span class="w" data-id="66">designers</span>, <span class="w" data-id="67">you</span> <span class="w" data-id="68">may</span> <span class="w" data-id="69">get</span> <span class="w" data-id="70">ten</span> <span class="w" data-id="71">different</span> <span class="w" data-id="72">answers</span>. <span class="w" data-id="73">However</span>, <span class="w" data-id="74">there</span> <span class="w" data-id="75">are</span> <span class="w" data-id="76">some</span> <span class="w" data-id="77">common</span> <span class="w" data-id="78">themes</span>.</p>
+<p>2 <span class="w" data-id="79">A</span> <span class="w" data-id="80">good</span> <span class="w" data-id="81">logo</span> <span class="w" data-id="82">is</span> <span class="w" data-id="83">clear</span> <span class="w" data-id="84">and</span> <span class="w" data-id="85">simple</span>. <span class="w" data-id="86">Simple</span> <span class="w" data-id="87">logos</span> <span class="w" data-id="88">are</span> <span class="w" data-id="89">easy</span> <span class="w" data-id="90">to</span> <span class="w" data-id="91">remember</span>. <span class="w" data-id="92">In</span> <span class="w" data-id="93">studies</span> <span class="w" data-id="94">where</span> <span class="w" data-id="95">participants</span> <span class="w" data-id="96">were</span> <span class="w" data-id="97">shown</span> <span class="w" data-id="98">hundreds</span> <span class="w" data-id="99">of</span> <span class="w" data-id="100">unfamiliar</span> <span class="w" data-id="101">logos</span>, <span class="w" data-id="102">the</span> <span class="w" data-id="103">ones</span> <span class="w" data-id="104">they</span> <span class="w" data-id="105">remembered</span> <span class="w" data-id="106">later</span> <span class="w" data-id="107">all</span> <span class="w" data-id="108">had</span> <span class="w" data-id="109">simple</span> <span class="w" data-id="110">designs</span>. <span class="w" data-id="111">Some</span> <span class="w" data-id="112">designers</span> <span class="w" data-id="113">advise</span> <span class="w" data-id="114">the</span> <span class="w" data-id="115">use</span> <span class="w" data-id="116">of</span> <span class="w" data-id="117">no</span> <span class="w" data-id="118">more</span> <span class="w" data-id="119">than</span> <span class="w" data-id="120">two</span> <span class="w" data-id="121">colours</span>. <span class="w" data-id="122">A</span> <span class="w" data-id="123">good</span> <span class="w" data-id="124">logo</span> <span class="w" data-id="125">must</span> <span class="w" data-id="126">also</span> <span class="w" data-id="127">be</span> <span class="w" data-id="128">unique</span> <span class="w" data-id="129">so</span> <span class="w" data-id="130">it</span> <span class="w" data-id="131">will</span> <span class="w" data-id="132">not</span> <span class="w" data-id="133">be</span> <span class="w" data-id="134">confused</span> <span class="w" data-id="135">with</span> <span class="w" data-id="136">the</span> <span class="w" data-id="137">logo</span> <span class="w" data-id="138">from</span> <span class="w" data-id="139">another</span> <span class="w" data-id="140">organization</span>. <span class="w" data-id="141">For</span> <span class="w" data-id="142">example</span>, <span class="w" data-id="143">the</span> <span class="w" data-id="144">logo</span> <span class="w" data-id="145">for</span> <span class="w" data-id="146">IKEA</span> <span class="w" data-id="147">is</span> <span class="w" data-id="148">so</span> <span class="w" data-id="149">familiar</span> <span class="w" data-id="150">that</span> <span class="w" data-id="151">any</span> <span class="w" data-id="152">new</span> <span class="w" data-id="153">logo</span> <span class="w" data-id="154">in</span> <span class="w" data-id="155">those</span> <span class="w" data-id="156">shades</span> <span class="w" data-id="157">of</span> <span class="w" data-id="158">blue</span> <span class="w" data-id="159">and</span> <span class="w" data-id="160">yellow</span> <span class="w" data-id="161">would</span> <span class="w" data-id="162">probably</span> <span class="w" data-id="163">remind</span> <span class="w" data-id="164">people</span> <span class="w" data-id="165">of</span> <span class="w" data-id="166">IKEA</span>. <span class="w" data-id="167">A</span> <span class="w" data-id="168">unique</span> <span class="w" data-id="169">logo</span> <span class="w" data-id="170">also</span> <span class="w" data-id="171">arouses</span> <span class="w" data-id="172">curiosity</span> <span class="w" data-id="173">when</span> <span class="w" data-id="174">people</span> <span class="w" data-id="175">see</span> <span class="w" data-id="176">it</span> <span class="w" data-id="177">for</span> <span class="w" data-id="178">the</span> <span class="w" data-id="179">first</span> <span class="w" data-id="180">time</span>. <span class="w" data-id="181">They</span> <span class="w" data-id="182">want</span> <span class="w" data-id="183">to</span> <span class="w" data-id="184">know</span> <span class="w" data-id="185">more</span> <span class="w" data-id="186">about</span> <span class="w" data-id="187">it</span>. <span class="w" data-id="188">When</span> <span class="w" data-id="189">tennis</span> <span class="w" data-id="190">star</span> <span class="w" data-id="191">Novak</span> <span class="w" data-id="192">Djokovic</span> <span class="w" data-id="193">began</span> <span class="w" data-id="194">wearing</span> <span class="w" data-id="195">shirts</span> <span class="w" data-id="196">by</span> <span class="w" data-id="197">the</span> <span class="w" data-id="198">Japanese</span> <span class="w" data-id="199">clothing</span> <span class="w" data-id="200">manufacturer</span> <span class="w" data-id="201">UNIQLO</span>, <span class="w" data-id="202">people</span> <span class="w" data-id="203">unfamiliar</span> <span class="w" data-id="204">with</span> <span class="w" data-id="205">the</span> <span class="w" data-id="206">company</span> <span class="w" data-id="207">became</span> <span class="w" data-id="208">curious</span> <span class="w" data-id="209">about</span> <span class="w" data-id="210">the</span> <span class="w" data-id="211">odd</span> <span class="w" data-id="212">combination</span> <span class="w" data-id="213">of</span> <span class="w" data-id="214">letters</span> <span class="w" data-id="215">that</span> <span class="w" data-id="216">make</span> <span class="w" data-id="217">up</span> <span class="w" data-id="218">its</span> <span class="w" data-id="219">logo</span>.</p>
+<p>3 <span class="w" data-id="220">Logos</span> <span class="w" data-id="221">should</span> <span class="w" data-id="222">be</span> <span class="w" data-id="223">flexible</span> <span class="w" data-id="224">enough</span> <span class="w" data-id="225">to</span> <span class="w" data-id="226">adapt</span> <span class="w" data-id="227">across</span> <span class="w" data-id="228">time</span> <span class="w" data-id="229">and</span> <span class="w" data-id="230">place</span>. <span class="w" data-id="231">Apple’s</span> <span class="w" data-id="232">iconic</span> <span class="w" data-id="233">logo</span> <span class="w" data-id="234">was</span> <span class="w" data-id="235">originally</span> <span class="w" data-id="236">rainbow</span> <span class="w" data-id="237">coloured</span>, <span class="w" data-id="238">which</span> <span class="w" data-id="239">worked</span> <span class="w" data-id="240">in</span> <span class="w" data-id="241">the</span> 1970<span class="w" data-id="242">s</span>, <span class="w" data-id="243">but</span> <span class="w" data-id="244">today</span> <span class="w" data-id="245">it</span> <span class="w" data-id="246">would</span> <span class="w" data-id="247">look</span> <span class="w" data-id="248">dated</span>. <span class="w" data-id="249">The</span> <span class="w" data-id="250">subsequent</span> <span class="w" data-id="251">grey</span> <span class="w" data-id="252">and</span> <span class="w" data-id="253">black</span> <span class="w" data-id="254">Apple</span> <span class="w" data-id="255">logo</span> <span class="w" data-id="256">looks</span> <span class="w" data-id="257">more</span> <span class="w" data-id="258">contemporary</span>, <span class="w" data-id="259">yet</span> <span class="w" data-id="260">it</span> <span class="w" data-id="261">retains</span> <span class="w" data-id="262">the</span> <span class="w" data-id="263">original</span> <span class="w" data-id="264">design</span>. <span class="w" data-id="265">Designers</span> <span class="w" data-id="266">also</span> <span class="w" data-id="267">need</span> <span class="w" data-id="268">to</span> <span class="w" data-id="269">consider</span> <span class="w" data-id="270">where</span> <span class="w" data-id="271">the</span> <span class="w" data-id="272">logo</span> <span class="w" data-id="273">will</span> <span class="w" data-id="274">appear</span>. <span class="w" data-id="275">Will</span> <span class="w" data-id="276">it</span> <span class="w" data-id="277">be</span> <span class="w" data-id="278">on</span> <span class="w" data-id="279">shopping</span> <span class="w" data-id="280">bags</span>? <span class="w" data-id="281">Coffee</span> <span class="w" data-id="282">cups</span>? <span class="w" data-id="283">Does</span> <span class="w" data-id="284">it</span> <span class="w" data-id="285">need</span> <span class="w" data-id="286">to</span> <span class="w" data-id="287">shrink</span> <span class="w" data-id="288">down</span> <span class="w" data-id="289">to</span> <span class="w" data-id="290">a</span> <span class="w" data-id="291">tiny</span> <span class="w" data-id="292">icon</span> <span class="w" data-id="293">on</span> <span class="w" data-id="294">a</span> <span class="w" data-id="295">digital</span> <span class="w" data-id="296">device</span>, <span class="w" data-id="297">like</span> <span class="w" data-id="298">the</span> <span class="w" data-id="299">Netflix</span> <span class="w" data-id="300">N</span> <span class="w" data-id="301">or</span> <span class="w" data-id="302">the</span> <span class="w" data-id="303">Facebook</span> <span class="w" data-id="304">f</span>? <span class="w" data-id="305">Will</span> <span class="w" data-id="306">people</span> <span class="w" data-id="307">be</span> <span class="w" data-id="308">able</span> <span class="w" data-id="309">to</span> <span class="w" data-id="310">recognize</span> <span class="w" data-id="311">it</span> <span class="w" data-id="312">from</span> <span class="w" data-id="313">far</span> <span class="w" data-id="314">away</span> <span class="w" data-id="315">on</span> <span class="w" data-id="316">the</span> <span class="w" data-id="317">side</span> <span class="w" data-id="318">of</span> <span class="w" data-id="319">a</span> <span class="w" data-id="320">truck</span>?</p>
+<p>4 <span class="w" data-id="321">More</span> <span class="w" data-id="322">than</span> <span class="w" data-id="323">anything</span> <span class="w" data-id="324">else</span>, <span class="w" data-id="325">a</span> <span class="w" data-id="326">logo</span> <span class="w" data-id="327">needs</span> <span class="w" data-id="328">to</span> <span class="w" data-id="329">tell</span> <span class="w" data-id="330">a</span> <span class="w" data-id="331">story</span> – <span class="w" data-id="332">to</span> <span class="w" data-id="333">convey</span> <span class="w" data-id="334">the</span> <span class="w" data-id="335">company’s</span> <span class="w" data-id="336">identity</span> <span class="w" data-id="337">and</span> <span class="w" data-id="338">evoke</span> <span class="w" data-id="339">an</span> <span class="w" data-id="340">emotional</span> <span class="w" data-id="341">response</span> <span class="w" data-id="342">in</span> <span class="w" data-id="343">the</span> <span class="w" data-id="344">people</span> <span class="w" data-id="345">who</span> <span class="w" data-id="346">see</span> <span class="w" data-id="347">it</span>. <span class="w" data-id="348">But</span> <span class="w" data-id="349">to</span> <span class="w" data-id="350">be</span> <span class="w" data-id="351">successful</span>, <span class="w" data-id="352">the</span> <span class="w" data-id="353">message</span> <span class="w" data-id="354">and</span> <span class="w" data-id="355">the</span> <span class="w" data-id="356">response</span> <span class="w" data-id="357">must</span> <span class="w" data-id="358">be</span> <span class="w" data-id="359">appropriate</span> <span class="w" data-id="360">for</span> <span class="w" data-id="361">the</span> <span class="w" data-id="362">organization</span> <span class="w" data-id="363">that</span> <span class="w" data-id="364">the</span> <span class="w" data-id="365">logo</span> <span class="w" data-id="366">represents</span>. <span class="w" data-id="367">The</span> <span class="w" data-id="368">Barbie</span> <span class="w" data-id="369">logo</span>, <span class="w" data-id="370">with</span> <span class="w" data-id="371">its</span> <span class="w" data-id="372">easygoing</span> <span class="w" data-id="373">yet</span> <span class="w" data-id="374">elegant</span> <span class="w" data-id="375">handwriting</span> <span class="w" data-id="376">in</span> <span class="w" data-id="377">the</span> <span class="w" data-id="378">signature</span> <span class="w" data-id="379">pink</span> <span class="w" data-id="380">colour</span>, <span class="w" data-id="381">represents</span> <span class="w" data-id="382">the</span> <span class="w" data-id="383">brand</span> <span class="w" data-id="384">precisely</span>. <span class="w" data-id="385">It</span> <span class="w" data-id="386">is</span> <span class="w" data-id="387">spontaneous</span> <span class="w" data-id="388">and</span> <span class="w" data-id="389">fun</span>. <span class="w" data-id="390">It</span> <span class="w" data-id="391">works</span> <span class="w" data-id="392">for</span> <span class="w" data-id="393">a</span> <span class="w" data-id="394">doll</span>, <span class="w" data-id="395">but</span> <span class="w" data-id="396">it</span> <span class="w" data-id="397">probably</span> <span class="w" data-id="398">would</span> <span class="w" data-id="399">not</span> <span class="w" data-id="400">be</span> <span class="w" data-id="401">effective</span> <span class="w" data-id="402">for</span> <span class="w" data-id="403">a</span> <span class="w" data-id="404">bank</span> <span class="w" data-id="405">or</span> <span class="w" data-id="406">an</span> <span class="w" data-id="407">insurance</span> <span class="w" data-id="408">company</span>.</p>
+<p>5 <span class="w" data-id="409">In</span> <span class="w" data-id="410">contrast</span>, <span class="w" data-id="411">the</span> <span class="w" data-id="412">FedEx</span> <span class="w" data-id="413">logo</span>, <span class="w" data-id="414">with</span> <span class="w" data-id="415">its</span> <span class="w" data-id="416">block</span> <span class="w" data-id="417">letters</span> <span class="w" data-id="418">forming</span> <span class="w" data-id="419">a</span> <span class="w" data-id="420">forward</span> <span class="w" data-id="421">pointing</span> <span class="w" data-id="422">arrow</span> <span class="w" data-id="423">between</span> <span class="w" data-id="424">the</span> ‘<span class="w" data-id="425">E</span>’ <span class="w" data-id="426">and</span> <span class="w" data-id="427">the</span> ‘<span class="w" data-id="428">x</span>’, <span class="w" data-id="429">looks</span> <span class="w" data-id="430">like</span> <span class="w" data-id="431">it</span> <span class="w" data-id="432">belongs</span> <span class="w" data-id="433">to</span> <span class="w" data-id="434">a</span> <span class="w" data-id="435">serious</span> <span class="w" data-id="436">business</span>. <span class="w" data-id="437">Its</span> <span class="w" data-id="438">aim</span> <span class="w" data-id="439">is</span> <span class="w" data-id="440">to</span> <span class="w" data-id="441">inspire</span> <span class="w" data-id="442">confidence</span>: <span class="w" data-id="443">we</span> <span class="w" data-id="444">are</span> <span class="w" data-id="445">a</span> <span class="w" data-id="446">company</span> <span class="w" data-id="447">you</span> <span class="w" data-id="448">can</span> <span class="w" data-id="449">trust</span> <span class="w" data-id="450">to</span> <span class="w" data-id="451">deliver</span> <span class="w" data-id="452">your</span> <span class="w" data-id="453">package</span>.</p>
+<p>6 <span class="w" data-id="454">An</span> <span class="w" data-id="455">emotional</span> <span class="w" data-id="456">response</span> <span class="w" data-id="457">is</span> <span class="w" data-id="458">particularly</span> <span class="w" data-id="459">important</span> <span class="w" data-id="460">for</span> <span class="w" data-id="461">charitable</span> <span class="w" data-id="462">organizations</span>. <span class="w" data-id="463">The</span> <span class="w" data-id="464">World</span> <span class="w" data-id="465">Wide</span> <span class="w" data-id="466">Fund</span> <span class="w" data-id="467">for</span> <span class="w" data-id="468">Nature</span> (<span class="w" data-id="469">WWF</span>) <span class="w" data-id="470">hopes</span> <span class="w" data-id="471">that</span> <span class="w" data-id="472">its</span> <span class="w" data-id="473">iconic</span> <span class="w" data-id="474">black</span> <span class="w" data-id="475">and</span> <span class="w" data-id="476">white</span> <span class="w" data-id="477">panda</span> <span class="w" data-id="478">resonates</span> <span class="w" data-id="479">with</span> <span class="w" data-id="480">the</span> <span class="w" data-id="481">public</span>, <span class="w" data-id="482">and</span> <span class="w" data-id="483">encourages</span> <span class="w" data-id="484">people</span> <span class="w" data-id="485">to</span> <span class="w" data-id="486">make</span> <span class="w" data-id="487">a</span> <span class="w" data-id="488">donation</span> <span class="w" data-id="489">to</span> <span class="w" data-id="490">support</span> <span class="w" data-id="491">its</span> <span class="w" data-id="492">global</span> <span class="w" data-id="493">conservation</span> <span class="w" data-id="494">work</span> <span class="w" data-id="495">saving</span> <span class="w" data-id="496">endangered</span> <span class="w" data-id="497">species</span> <span class="w" data-id="498">and</span> <span class="w" data-id="499">their</span> <span class="w" data-id="500">habitats</span>, <span class="w" data-id="501">and</span> <span class="w" data-id="502">reducing</span> <span class="w" data-id="503">people’s</span> <span class="w" data-id="504">footprint</span> <span class="w" data-id="505">for</span> <span class="w" data-id="506">a</span> <span class="w" data-id="507">sustainable</span> <span class="w" data-id="508">future</span>.</p>
+<p>7 <span class="w" data-id="509">Once</span> <span class="w" data-id="510">a</span> <span class="w" data-id="511">logo</span> <span class="w" data-id="512">becomes</span> <span class="w" data-id="513">widely</span> <span class="w" data-id="514">recognized</span>, <span class="w" data-id="515">businesses</span> <span class="w" data-id="516">and</span> <span class="w" data-id="517">organizations</span> <span class="w" data-id="518">often</span> <span class="w" data-id="519">rely</span> <span class="w" data-id="520">more</span> <span class="w" data-id="521">on</span> <span class="w" data-id="522">the</span> <span class="w" data-id="523">logo</span> <span class="w" data-id="524">than</span> <span class="w" data-id="525">their</span> <span class="w" data-id="526">name</span>. <span class="w" data-id="527">The</span> <span class="w" data-id="528">public</span> <span class="w" data-id="529">immediately</span> <span class="w" data-id="530">recognizes</span> <span class="w" data-id="531">the</span> <span class="w" data-id="532">Nike</span> <span class="w" data-id="533">swoosh</span>, <span class="w" data-id="534">the</span> <span class="w" data-id="535">McDonald’s</span> <span class="w" data-id="536">golden</span> <span class="w" data-id="537">arches</span> <span class="w" data-id="538">or</span> <span class="w" data-id="539">Apple’s</span> <span class="w" data-id="540">apple</span>. <span class="w" data-id="541">Research</span> <span class="w" data-id="542">has</span> <span class="w" data-id="543">shown</span> <span class="w" data-id="544">that</span> <span class="w" data-id="545">the</span> <span class="w" data-id="546">more</span> <span class="w" data-id="547">evocative</span> <span class="w" data-id="548">the</span> <span class="w" data-id="549">logo</span>, <span class="w" data-id="550">the</span> <span class="w" data-id="551">more</span> <span class="w" data-id="552">positive</span> <span class="w" data-id="553">the</span> <span class="w" data-id="554">impact</span> <span class="w" data-id="555">on</span> <span class="w" data-id="556">customer</span> <span class="w" data-id="557">loyalty</span> – <span class="w" data-id="558">suggesting</span> <span class="w" data-id="559">that</span> <span class="w" data-id="560">the</span> <span class="w" data-id="561">most</span> <span class="w" data-id="562">powerful</span> <span class="w" data-id="563">logos</span> <span class="w" data-id="564">are</span> <span class="w" data-id="565">those</span> <span class="w" data-id="566">which</span> <span class="w" data-id="567">forgo</span>¹ <span class="w" data-id="568">lettering</span> <span class="w" data-id="569">to</span> <span class="w" data-id="570">rely</span> <span class="w" data-id="571">on</span> <span class="w" data-id="572">symbols</span>.</p>
+<p>8 <span class="w" data-id="573">Making</span> <span class="w" data-id="574">a</span> <span class="w" data-id="575">brand</span> <span class="w" data-id="576">stand</span> <span class="w" data-id="577">out</span> <span class="w" data-id="578">from</span> <span class="w" data-id="579">the</span> <span class="w" data-id="580">crowd</span> <span class="w" data-id="581">is</span> <span class="w" data-id="582">key</span> <span class="w" data-id="583">to</span> <span class="w" data-id="584">the</span> <span class="w" data-id="585">survival</span> <span class="w" data-id="586">of</span> <span class="w" data-id="587">a</span> <span class="w" data-id="588">business</span> – <span class="w" data-id="589">and</span> <span class="w" data-id="590">a</span> <span class="w" data-id="591">logo</span> <span class="w" data-id="592">is</span> <span class="w" data-id="593">one</span> <span class="w" data-id="594">powerful</span> <span class="w" data-id="595">tool</span> <span class="w" data-id="596">in</span> <span class="w" data-id="597">achieving</span> <span class="w" data-id="598">this</span>. <span class="w" data-id="599">For</span> <span class="w" data-id="600">other</span> <span class="w" data-id="601">types</span> <span class="w" data-id="602">of</span> <span class="w" data-id="603">organizations</span>, <span class="w" data-id="604">it</span> <span class="w" data-id="605">is</span> <span class="w" data-id="606">the</span> <span class="w" data-id="607">public’s</span> <span class="w" data-id="608">connection</span> <span class="w" data-id="609">to</span> <span class="w" data-id="610">the</span> <span class="w" data-id="611">role</span> <span class="w" data-id="612">the</span> <span class="w" data-id="613">organization</span> <span class="w" data-id="614">plays</span> <span class="w" data-id="615">in</span> <span class="w" data-id="616">society</span> <span class="w" data-id="617">that</span> <span class="w" data-id="618">is</span> <span class="w" data-id="619">important</span>, <span class="w" data-id="620">and</span> <span class="w" data-id="621">logos</span> <span class="w" data-id="622">can</span> <span class="w" data-id="623">help</span> <span class="w" data-id="624">to</span> <span class="w" data-id="625">reinforce</span> <span class="w" data-id="626">this</span>. <span class="w" data-id="627">Whatever</span> <span class="w" data-id="628">the</span> <span class="w" data-id="629">type</span> <span class="w" data-id="630">of</span> <span class="w" data-id="631">organization</span>, <span class="w" data-id="632">those</span> <span class="w" data-id="633">who</span> <span class="w" data-id="634">get</span> <span class="w" data-id="635">their</span> <span class="w" data-id="636">logos</span> <span class="w" data-id="637">right</span> <span class="w" data-id="638">will</span> <span class="w" data-id="639">reap</span> <span class="w" data-id="640">the</span> <span class="w" data-id="641">benefits</span>² <span class="w" data-id="642">for</span> <span class="w" data-id="643">many</span> <span class="w" data-id="644">years</span> <span class="w" data-id="645">to</span> <span class="w" data-id="646">come</span>.</p>
+<p><span class="w" data-id="647">Footnotes</span></p>
+<p>¹<span class="w" data-id="648">forgo</span> (<span class="w" data-id="649">v</span>) <span class="w" data-id="650">not</span> <span class="w" data-id="651">use</span> / <span class="w" data-id="652">have</span> / <span class="w" data-id="653">do</span> <span class="w" data-id="654">something</span> <span class="w" data-id="655">that</span> <span class="w" data-id="656">is</span> <span class="w" data-id="657">usual</span></p>
+<p>²<span class="w" data-id="658">reap</span> <span class="w" data-id="659">the</span> <span class="w" data-id="660">benefits</span> (<span class="w" data-id="661">v</span> <span class="w" data-id="662">phr</span>, <span class="w" data-id="663">idiom</span>) <span class="w" data-id="664">to</span> <span class="w" data-id="665">get</span> <span class="w" data-id="666">something</span> <span class="w" data-id="667">good</span> <span class="w" data-id="668">as</span> <span class="w" data-id="669">the</span> <span class="w" data-id="670">result</span> <span class="w" data-id="671">of</span> <span class="w" data-id="672">your</span> <span class="w" data-id="673">own</span> <span class="w" data-id="674">action</span></p>
+    </section>
+  </main>
+
+  <section class="panel" id="panel" hidden aria-live="polite"><div class="panel-inner"><div class="panel-head"><h2>你标记的生词/短语</h2><button class="close" id="closePanel">收起 ✕</button></div><div id="preview"></div><div class="panel-actions"><button class="btn primary" id="copyBtn">复制生词列表</button><span class="status" id="status"></span></div></div></section>
+
+  <script>
+  (() => {
+    'use strict';
+    const EXAM_CODE = 'Unlock_L5_RW_U02_R1';
+    const PAPER = 'Unlock Level 5 R&W · Unit 02 · Reading 1';
+    const SB_URL = '';
+    const SB_ANON_KEY = '';
+    const TASK_TYPE = 'Unlock_Level_5_R_W-标生词';
+    const SET_NUM = 5;
+    const LONGPRESS_MS = 500, MOUSE_LONGPRESS_MS = 500, MOVE_TOLERANCE = 10;
+    const marked = new Set(), history = [], idMap = Object.create(null);
+    const $ = id => document.getElementById(id);
+    const gate = $('gate'), initialsInput = $('initials'), startBtn = $('startBtn'), gateError = $('gateError');
+    const examTag = $('examTag'), who = $('who'), cnt = $('cnt'), panel = $('panel'), preview = $('preview'), status = $('status');
+    let initials = '', studentCode = '', press = null, holdTimer = null, undoTimer = null;
+
+    document.querySelectorAll('.w').forEach(el => { idMap[Number(el.dataset.id)] = el; });
+    const safeGet = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
+    const safeSet = (key, value) => { try { localStorage.setItem(key, value); } catch (_) { } };
+    const safeRemove = key => { try { localStorage.removeItem(key); } catch (_) { } };
+    const todaySuffix = () => { const now = new Date(); return String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0'); };
+    const draftKey = () => `examdraft::${location.pathname}::${studentCode}`;
+    const sentKey = () => `examsent::${location.pathname}::${studentCode}`;
+    const isInitials = value => /^[A-Z]{2,8}$/.test(value);
+    const fullName = () => studentCode ? `${EXAM_CODE}_${studentCode}` : EXAM_CODE;
+
+    function renderIdentity() {
+      examTag.textContent = fullName();
+      document.title = fullName();
+      who.innerHTML = '';
+      if (studentCode) {
+        who.append(document.createTextNode(studentCode));
+        const change = document.createElement('button'); change.type = 'button'; change.textContent = '换人'; change.addEventListener('click', changeStudent); who.append(change);
+      }
+    }
+    function groups() {
+      const ids = [...marked].sort((a,b) => a-b), result = [];
+      for (const id of ids) {
+        const last = result[result.length - 1];
+        if (last && id === last.end + 1) { last.end = id; last.ids.push(id); }
+        else result.push({ start:id, end:id, ids:[id] });
+      }
+      return result.map(group => {
+        const first = idMap[group.start];
+        const p = first && first.closest('p');
+        const section = first && first.closest('#content')?.querySelector('.section-title')?.textContent.trim() || '';
+        const part = first && first.closest('#content')?.querySelector('.part-title')?.textContent.trim() || '';
+        return { text: group.ids.map(id => idMap[id].textContent).join(' '), where: [section,part].filter(Boolean).join(' · '), context: (p ? p.textContent : '').replace(/\s+/g,' ').trim().slice(0,400), ids:[group.start,group.end] };
+      });
+    }
+    function saveDraft() { if (!studentCode) return; safeSet(draftKey(), JSON.stringify([...marked].sort((a,b)=>a-b))); }
+    function paint() {
+      document.querySelectorAll('.w').forEach(el => el.classList.toggle('m', marked.has(Number(el.dataset.id))));
+      cnt.textContent = `已标记 ${groups().length} 处`;
+      renderReceipt();
+    }
+    function renderReceipt() {
+      if (!studentCode) return;
+      const raw = safeGet(sentKey());
+      if (!raw) { status.textContent = SB_URL && SB_ANON_KEY ? '预览后可发送给老师。' : '本页可离线使用，复制列表后交给老师。'; return; }
+      try { const item = JSON.parse(raw), signature = groups().map(g=>g.text).join('|'); status.textContent = item.signature === signature ? `已发送：${item.count} 处` : '已有发送记录；修改后如需提交，请重新发送。'; } catch (_) { status.textContent = ''; }
+    }
+    function loadDraft() {
+      marked.clear(); history.length = 0;
+      try { const saved = JSON.parse(safeGet(draftKey()) || '[]'); if (Array.isArray(saved)) saved.forEach(id => { id=Number(id); if (idMap[id]) { marked.add(id); history.push(id); } }); } catch (_) { }
+      paint();
+    }
+    function add(id) { if (!marked.has(id)) { marked.add(id); history.push(id); } }
+    function remove(id) { if (marked.delete(id)) { let index; while ((index = history.lastIndexOf(id)) !== -1) history.splice(index,1); } }
+    function toggle(id) { marked.has(id) ? remove(id) : add(id); saveDraft(); paint(); }
+    function clearPreview() { document.querySelectorAll('.w.preview').forEach(el => el.classList.remove('preview')); }
+    function previewRange(a,b) {
+      clearPreview(); const start = Math.min(a,b), end = Math.max(a,b);
+      for (let id=start; id<=end; id++) if (idMap[id]) idMap[id].classList.add('preview');
+    }
+    function wordAt(x,y) {
+      for (const delta of [0,-4,4,-8,8,-12,12]) { const el = document.elementFromPoint(x+delta,y); const word = el && el.closest && el.closest('.w'); if (word) return word; }
+      return null;
+    }
+    function cancelPress() { clearTimeout(holdTimer); holdTimer = null; clearPreview(); press = null; }
+    function begin(id,x,y,kind) {
+      cancelPress(); press = {id,x,y,kind,long:false,current:id};
+      holdTimer = setTimeout(() => { if (!press) return; press.long = true; previewRange(press.id,press.current); if (kind === 'touch' && navigator.vibrate) navigator.vibrate(8); }, kind === 'mouse' ? MOUSE_LONGPRESS_MS : LONGPRESS_MS);
+    }
+    function move(x,y,event) {
+      if (!press) return;
+      if (!press.long) { if (Math.hypot(x-press.x,y-press.y) > MOVE_TOLERANCE) cancelPress(); return; }
+      if (event && event.cancelable) event.preventDefault();
+      const word = wordAt(x,y); if (word) { press.current = Number(word.dataset.id); previewRange(press.id,press.current); }
+    }
+    function end(event) {
+      if (!press) return; clearTimeout(holdTimer); const active = press; press = null;
+      if (active.long) {
+        if (event && event.cancelable) event.preventDefault();
+        const start = Math.min(active.id,active.current), finish = Math.max(active.id,active.current);
+        for (let id=start; id<=finish; id++) if (idMap[id]) add(id);
+        clearPreview(); saveDraft(); paint();
+      } else toggle(active.id);
+    }
+    document.addEventListener('mousedown', event => { const word=event.target.closest?.('.w'); if (!word || event.button !== 0) return; event.preventDefault(); begin(Number(word.dataset.id),event.clientX,event.clientY,'mouse'); });
+    document.addEventListener('mousemove', event => move(event.clientX,event.clientY,event));
+    document.addEventListener('mouseup', end);
+    document.addEventListener('touchstart', event => { const touch=event.changedTouches[0], word=event.target.closest?.('.w'); if (word && touch) begin(Number(word.dataset.id),touch.clientX,touch.clientY,'touch'); }, {passive:true});
+    document.addEventListener('touchmove', event => { const touch=event.changedTouches[0]; if (touch) move(touch.clientX,touch.clientY,event); }, {passive:false});
+    document.addEventListener('touchend', end, {passive:false}); document.addEventListener('touchcancel', cancelPress, {passive:true});
+    document.addEventListener('contextmenu', event => { if (event.target.closest?.('.w')) event.preventDefault(); });
+    function undo() { while (history.length) { const id=history.pop(); if (marked.delete(id)) { saveDraft(); paint(); return; } } }
+    function stopUndo() { clearTimeout(undoTimer); undoTimer = null; }
+    function startUndo(event) { if (event?.type === 'mousedown' && event.button !== 0) return; event?.preventDefault(); undo(); stopUndo(); undoTimer = setTimeout(() => { undoTimer = setInterval(undo,90); },500); }
+    $('undoBtn').addEventListener('mousedown',startUndo); $('undoBtn').addEventListener('touchstart',startUndo,{passive:false}); ['mouseup','mouseleave','touchend','touchcancel'].forEach(type => $('undoBtn').addEventListener(type,stopUndo));
+    $('clearBtn').addEventListener('click', () => { if (!marked.size || !confirm('确定清空所有标记吗？')) return; marked.clear(); history.length=0; safeRemove(draftKey()); paint(); });
+    function renderPanel() {
+      const list = groups(); preview.innerHTML = '';
+      if (!list.length) { preview.textContent = '还没有标记任何内容。'; }
+      else { const ol=document.createElement('ol'); ol.className='preview-list'; list.forEach(item=>{ const li=document.createElement('li'); li.textContent=item.text; ol.append(li); }); preview.append(ol); }
+      $('copyBtn').disabled = !list.length; panel.hidden=false; renderReceipt();
+    }
+    $('submitBtn').addEventListener('click',renderPanel); $('closePanel').addEventListener('click',()=>{panel.hidden=true;});
+    $('copyBtn').addEventListener('click', async () => {
+      const text = `${fullName()}\n` + groups().map((g,i)=>`${i+1}. ${g.text}`).join('\n');
+      try { await navigator.clipboard.writeText(text); } catch (_) { const area=document.createElement('textarea'); area.value=text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove(); }
+      status.textContent = '已复制生词列表。';
+    });
+    function validateInput() { const value=initialsInput.value.toUpperCase().replace(/\s/g,''); initialsInput.value=value; const ok=isInitials(value); startBtn.disabled=!ok; gateError.textContent=ok?'':'请输入 2–8 个英文字母。'; return ok; }
+    function start() {
+      if (!validateInput()) return; initials=initialsInput.value; const savedInitials=safeGet('examstudentinitials'), savedCode=safeGet('examstudentcode');
+      studentCode = savedInitials===initials && new RegExp(`^${initials}\\d{4}$`).test(savedCode||'') ? savedCode : initials+todaySuffix();
+      safeSet('examstudentinitials',initials); safeSet('examstudentcode',studentCode); gate.hidden=true; renderIdentity(); loadDraft();
+    }
+    function changeStudent() { saveDraft(); panel.hidden=true; studentCode=''; renderIdentity(); gate.hidden=false; initialsInput.focus(); }
+    initialsInput.addEventListener('input',validateInput); initialsInput.addEventListener('keydown',event=>{if(event.key==='Enter'&&!startBtn.disabled) start();}); startBtn.addEventListener('click',start);
+    const requested = new URLSearchParams(location.search).get('s') || safeGet('examstudentinitials') || '';
+    const full = requested.toUpperCase().match(/^([A-Z]{2,8})(\d{4})$/); initialsInput.value=(full ? full[1] : requested).replace(/[^A-Za-z]/g,'').toUpperCase();
+    if (full) { safeSet('examstudentinitials',full[1]); safeSet('examstudentcode',full[0]); }
+    validateInput(); renderIdentity();
+  })();
+  </script>
+</body>
+</html>
