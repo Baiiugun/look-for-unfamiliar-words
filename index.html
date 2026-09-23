@@ -14,8 +14,8 @@
 .panel select{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;background:#fff}
 .hint{color:var(--muted);font-size:12.5px;margin:5px 0 0}.hint.warn{color:var(--warn)} button,a.btn{font:inherit;cursor:pointer;border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 14px;color:var(--text);text-decoration:none;display:inline-block}
 a.btn.teacher{display:block;text-align:center;margin-top:16px;color:var(--muted);font-size:13.5px;background:none}a.btn.teacher:hover{color:var(--blue);background:#fff}
-.paperlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-top:8px}
-.paperlink{display:block;text-align:center;padding:10px 8px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);text-decoration:none;font-size:14px;font-weight:600;line-height:1.35}
+.paperlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-top:8px}
+.paperlink{display:block;text-align:center;padding:10px 8px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);text-decoration:none;font-size:14px;font-weight:600}
 .paperlink:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
 footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
 </style>
@@ -30,56 +30,14 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
     <div class="field"><p class="step">2. 试卷</p><p class="hint" id="paperHint"></p><div class="paperlist" id="paperList"></div></div>
   </section>
   <a class="btn teacher" href="%E6%A0%87%E8%AE%B0%E5%8D%95%E8%AF%8D%E7%BB%93%E6%9E%9C-%E8%80%81%E5%B8%88%E7%99%BB%E5%BD%95%E7%89%88%E6%9C%AC.html">🔒 教师登录 · 查看标记结果 →</a>
-  <footer>仅供课堂使用 · 更新于 2026-09-21</footer>
+  <footer>仅供课堂使用 · 更新于 2026-09-23</footer>
 </main>
 <script>
 const catalog = {"site_title": "Look for unfamiliar words", "exams": [{"id": "gaokao", "name": "高考", "papers": [{"label": "2014-全国1卷", "file": "2014-全国1卷.html"}, {"label": "2014-全国2卷", "file": "2014-全国2卷.html"}, {"label": "2015-全国1卷", "file": "2015-全国1卷.html"}, {"label": "2015-全国2卷", "file": "2015-全国2卷.html"}, {"label": "2016-全国1卷", "file": "2016-全国1卷.html"}, {"label": "2016-全国2卷", "file": "2016-全国2卷.html"}, {"label": "2016-全国3卷", "file": "2016-全国3卷.html"}, {"label": "2017-全国1卷", "file": "2017-全国1卷.html"}, {"label": "2017-全国2卷", "file": "2017-全国2卷.html"}, {"label": "2017-全国3卷", "file": "2017-全国3卷.html"}, {"label": "2018-全国1卷", "file": "2018-全国1卷.html"}, {"label": "2018-全国2卷", "file": "2018-全国2卷.html"}, {"label": "2018-全国3卷", "file": "2018-全国3卷.html"}, {"label": "2019-全国1卷", "file": "2019-全国1卷.html"}, {"label": "2019-全国2卷", "file": "2019-全国2卷.html"}, {"label": "2019-全国3卷", "file": "2019-全国3卷.html"}, {"label": "2020-全国1卷", "file": "2020-全国1卷.html"}, {"label": "2020-全国2卷", "file": "2020-全国2卷.html"}, {"label": "2020-全国3卷", "file": "2020-全国3卷.html"}, {"label": "2020-新高考1卷", "file": "2020-新高考1卷.html"}, {"label": "2020-新高考2卷", "file": "2020-新高考2卷.html"}, {"label": "2021-全国乙卷", "file": "2021-全国乙卷.html"}, {"label": "2021-全国甲卷", "file": "2021-全国甲卷.html"}, {"label": "2021-新高考1卷", "file": "2021-新高考1卷.html"}, {"label": "2021-新高考2卷", "file": "2021-新高考2卷.html"}, {"label": "2022-全国乙卷", "file": "2022-全国乙卷.html"}, {"label": "2022-全国甲卷", "file": "2022-全国甲卷.html"}, {"label": "2022-新高考1卷", "file": "2022-新高考1卷.html"}, {"label": "2022-新高考2卷", "file": "2022-新高考2卷.html"}, {"label": "2023-全国乙卷", "file": "2023-全国乙卷.html"}, {"label": "2023-全国甲卷", "file": "2023-全国甲卷.html"}, {"label": "2023-新课标1卷", "file": "2023-新课标1卷.html"}, {"label": "2023-新课标2卷", "file": "2023-新课标2卷.html"}, {"label": "2024-九省联考", "file": "2024-九省联考.html"}, {"label": "2024-全国甲卷", "file": "2024-全国甲卷.html"}, {"label": "2024-新课标1卷", "file": "2024-新课标1卷.html"}, {"label": "2024-新课标2卷", "file": "2024-新课标2卷.html"}, {"label": "2025-全国二卷", "file": "2025-全国二卷.html"}, {"label": "2025-八省联考", "file": "2025-八省联考.html"}, {"label": "2025-新课标1卷", "file": "2025-新课标1卷.html"}, {"label": "2026-全国一卷", "file": "2026-全国一卷.html"}, {"label": "2026-全国二卷", "file": "2026-全国二卷.html"}]}, {"id": "cet4", "name": "CET-4 真题", "papers": []}, {"id": "cet6", "name": "CET-6 真题", "papers": []}, {"id": "kaoyan1", "name": "考研英语一", "papers": []}, {"id": "kaoyan2", "name": "考研英语二", "papers": [{"label": "2010年", "file": "考研英语二_2010.html"}, {"label": "2011年", "file": "考研英语二_2011.html"}, {"label": "2012年", "file": "考研英语二_2012.html"}, {"label": "2013年", "file": "考研英语二_2013.html"}, {"label": "2014年", "file": "考研英语二_2014.html"}, {"label": "2015年", "file": "考研英语二_2015.html"}, {"label": "2016年", "file": "考研英语二_2016.html"}, {"label": "2017年", "file": "考研英语二_2017.html"}, {"label": "2018年", "file": "考研英语二_2018.html"}, {"label": "2019年", "file": "考研英语二_2019.html"}, {"label": "2020年", "file": "考研英语二_2020.html"}, {"label": "2021年", "file": "考研英语二_2021.html"}, {"label": "2022年", "file": "考研英语二_2022.html"}, {"label": "2023年", "file": "考研英语二_2023.html"}, {"label": "2024年", "file": "考研英语二_2024.html"}, {"label": "2025年", "file": "考研英语二_2025.html"}, {"label": "2026年", "file": "考研英语二_2026.html"}]}, {"id": "unlock2-rw", "name": "Unlock Level 2 R&W", "papers": []}, {"id": "unlock3-rw", "name": "Unlock Level 3 R&W", "papers": []}, {"id": "unlock4-rw", "name": "Unlock Level 4 R&W", "papers": []}, {"id": "unlock5-rw", "name": "Unlock Level 5 R&W", "papers": []}]};
-const unlock3Papers = [
-  ['Unit 1 · Reading 1 · Endangered Species', 'unlock-level-3-rw/Unlock3-RW_U1R1.html'],
-  ['Unit 1 · Reading 2 · Red and Grey Squirrel Fact File & Texts', 'unlock-level-3-rw/Unlock3-RW_U1R2.html'],
-  ['Unit 2 · Reading 1 · Our Changing Planet', 'unlock-level-3-rw/Unlock3-RW_U2R1.html'],
-  ['Unit 2 · Reading 2 · The Causes and Effects of Deforestation', 'unlock-level-3-rw/Unlock3-RW_U2R2.html'],
-  ['Unit 3 · Reading 1 · Urban Transport: Problems and Solutions', 'unlock-level-3-rw/Unlock3-RW_U3R1.html'],
-  ['Unit 3 · Reading 2 · Traffic Congestion: Problems and Solutions', 'unlock-level-3-rw/Unlock3-RW_U3R2.html'],
-  ['Unit 4 · Reading 1 · Customs Around the World', 'unlock-level-3-rw/Unlock3-RW_U4R1.html'],
-  ['Unit 4 · Reading 2 · Protecting Our Intangible Cultural Heritage', 'unlock-level-3-rw/Unlock3-RW_U4R2.html'],
-  ['Unit 5 · Reading 1 · Keep Fit! It’s Easier Than You Might Think', 'unlock-level-3-rw/Unlock3-RW_U5R1.html'],
-  ['Unit 5 · Reading 2 · World Health Organization Warns About the Increase in Obesity', 'unlock-level-3-rw/Unlock3-RW_U5R2.html'],
-  ['Unit 6 · Reading 1 · The Magic of Mimicry', 'unlock-level-3-rw/Unlock3-RW_U6R1.html'],
-  ['Unit 6 · Reading 2 · Deepfakes: Benefit or Threat?', 'unlock-level-3-rw/Unlock3-RW_U6R2.html'],
-  ['Unit 7 · Reading 1 · Thrifting Goes Global', 'unlock-level-3-rw/Unlock3-RW_U7R1.html'],
-  ['Unit 7 · Reading 2 · Offshore Production', 'unlock-level-3-rw/Unlock3-RW_U7R2.html'],
-  ['Unit 8 · Reading 1 · How Should You Invest Your Money?', 'unlock-level-3-rw/Unlock3-RW_U8R1.html'],
-  ['Unit 8 · Reading 2 · What Has Happened to the Dream of a Better Life?', 'unlock-level-3-rw/Unlock3-RW_U8R2.html']
-].map(([label, file]) => ({label, file}));
-const unlock5Papers = [
-  ['Unit 1 · Reading 1 · Are We Living in the Digital Dark Ages?', 'unlock-level-5-rw/Unlock_L5_RW_U01_R1.html'],
-  ['Unit 1 · Reading 2 · Preserving Our Heritage', 'unlock-level-5-rw/Unlock_L5_RW_U01_R2.html'],
-  ['Unit 2 · Reading 1 · What Makes a Successful Logo?', 'unlock-level-5-rw/Unlock_L5_RW_U02_R1.html'],
-  ['Unit 2 · Reading 2 · Rebranding and Logos', 'unlock-level-5-rw/Unlock_L5_RW_U02_R2.html'],
-  ['Unit 3 · Reading 1 · Cybercrime Is on the Rise', 'unlock-level-5-rw/Unlock_L5_RW_U03_R1.html'],
-  ['Unit 3 · Reading 2 · Combatting Cybercrime', 'unlock-level-5-rw/Unlock_L5_RW_U03_R2.html'],
-  ['Unit 4 · Reading 1 · Starting Out Mobile', 'unlock-level-5-rw/Unlock_L5_RW_U04_R1.html'],
-  ['Unit 4 · Reading 2 · Keeping Your Customers', 'unlock-level-5-rw/Unlock_L5_RW_U04_R2.html'],
-  ['Unit 5 · Reading 1 · The Creative Mind', 'unlock-level-5-rw/Unlock_L5_RW_U05_R1.html'],
-  ['Unit 5 · Reading 2 · Can We Learn to Be More Creative?', 'unlock-level-5-rw/Unlock_L5_RW_U05_R2.html'],
-  ['Unit 6 · Reading 1 · The Skills Gap', 'unlock-level-5-rw/Unlock_L5_RW_U06_R1.html'],
-  ['Unit 6 · Reading 2 · What Is the Value of a University Education?', 'unlock-level-5-rw/Unlock_L5_RW_U06_R2.html'],
-  ['Unit 7 · Reading 1 · Air Pollution and Public Health', 'unlock-level-5-rw/Unlock_L5_RW_U07_R1.html'],
-  ['Unit 7 · Reading 2 · How Ocean Pollution Affects Health', 'unlock-level-5-rw/Unlock_L5_RW_U07_R2.html'],
-  ['Unit 8 · Reading 1 · The Value of Talent', 'unlock-level-5-rw/Unlock_L5_RW_U08_R1.html'],
-  ['Unit 8 · Reading 2 · The Perfect Work Team', 'unlock-level-5-rw/Unlock_L5_RW_U08_R2.html'],
-  ['Unit 9 · Reading 1 · AR: Changing the World Around Us', 'unlock-level-5-rw/Unlock_L5_RW_U09_R1.html'],
-  ['Unit 9 · Reading 2 · AR in Education – A Positive or Negative Development?', 'unlock-level-5-rw/Unlock_L5_RW_U09_R2.html'],
-  ['Unit 10 · Reading 1 · Loanwords in English', 'unlock-level-5-rw/Unlock_L5_RW_U10_R1.html'],
-  ['Unit 10 · Reading 2 · Linguistic Purism and English as a Global Language', 'unlock-level-5-rw/Unlock_L5_RW_U10_R2.html']
-].map(([label, file]) => ({label, file}));
-catalog.exams.find(item => item.id === 'unlock3-rw').papers = unlock3Papers;
-catalog.exams.find(item => item.id === 'unlock5-rw').papers = unlock5Papers;
 const $ = id => document.getElementById(id);
 function esc(text){ return String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function currentExam(){ return catalog.exams.find(item => item.id === $('exam').value); }
-function fillPapers(){ const exam=currentExam(), list=$('paperList'), hint=$('paperHint'); const papers=(exam && exam.papers) || []; list.innerHTML=''; if(!papers.length){ hint.textContent='该类别的试卷目录尚未添加。'; hint.className='hint warn'; } else { hint.textContent='点击文章直接进入：'; hint.className='hint'; list.innerHTML=papers.map(p=>'<a class="paperlink" href="'+p.file.split('/').map(encodeURIComponent).join('/')+'">'+esc(p.label)+'</a>').join(''); } }
+function fillPapers(){ const exam=currentExam(), list=$('paperList'), hint=$('paperHint'); const papers=(exam && exam.papers) || []; list.innerHTML=''; if(!papers.length){ hint.textContent='该类别的试卷目录尚未添加。'; hint.className='hint warn'; } else { hint.textContent='点击试卷直接进入：'; hint.className='hint'; list.innerHTML=papers.map(p=>'<a class="paperlink" href="'+encodeURIComponent(p.file)+'">'+esc(p.label)+'</a>').join(''); } }
 function init(){ $('exam').innerHTML='<option value="">请选择考试或文本</option>'+catalog.exams.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join(''); }
 $('exam').addEventListener('change', fillPapers);
 init();

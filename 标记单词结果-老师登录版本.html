@@ -201,15 +201,18 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   function items(r){ return (r.answers && r.answers.items) || []; }
   function files(r){ return (r.grading && r.grading.files) || {}; }
 
+  /* 学生编号从 2026-09-23 起是「缩写+月日时分」，每交一次都不同。分组只认字母缩写，
+     否则同一个人每交一次就多出一个“学生”，「只看最新一份」也会失效。卡片上仍显示完整编号。 */
+  function stuOf(r){ var m = String(r.student_name || '').match(/^[A-Za-z]+/); return m ? m[0].toUpperCase() : String(r.student_name || ''); }
   function visible(){
     var stu = $('fStu').value, task = $('fTask').value, yr = $('fYear').value, latest = $('fLatest').checked;
     var seen = new Set();
     return rows.filter(function(r){
-      if(stu && r.student_name !== stu) return false;
+      if(stu && stuOf(r) !== stu) return false;
       if(task && r.task_type !== task) return false;
       if(yr && String(r.set_num) !== yr) return false;
       if(latest){
-        var k = r.student_name + '|' + r.task_type + '|' + r.set_num;
+        var k = stuOf(r) + '|' + r.task_type + '|' + r.set_num;
         if(seen.has(k)) return false;
         seen.add(k);
       }
@@ -225,7 +228,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   }
 
   function render(){
-    fillSelect($('fStu'), Array.from(new Set(rows.map(function(r){ return r.student_name; }))).sort(), '全部学生');
+    fillSelect($('fStu'), Array.from(new Set(rows.map(stuOf))).sort(), '全部学生');
     fillSelect($('fTask'), Array.from(new Set(rows.map(function(r){ return r.task_type; }))).sort(), '全部考试 / 文本');
     fillSelect($('fYear'), Array.from(new Set(rows.map(function(r){ return r.set_num; }))).sort(function(a,b){ return b-a; }), '全部试卷');
     var list = visible();
@@ -236,7 +239,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
     // 同一学生同一套卷子交了几次、这是第几次
     var counts = {}, order = {};
     rows.slice().reverse().forEach(function(r){
-      var k = r.student_name + '|' + r.task_type + '|' + r.set_num;
+      var k = stuOf(r) + '|' + r.task_type + '|' + r.set_num;
       counts[k] = (counts[k] || 0) + 1; order[r.id] = counts[k];
     });
 
@@ -245,7 +248,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
       return;
     }
     $('list').innerHTML = list.map(function(r){
-      var its = items(r), f = files(r), k = r.student_name + '|' + r.task_type + '|' + r.set_num;
+      var its = items(r), f = files(r), k = stuOf(r) + '|' + r.task_type + '|' + r.set_num;
       var isNew = seenAt && r.updated_at > seenAt;
       var nth = counts[k] > 1 ? '<span class="chip old">第 ' + order[r.id] + '/' + counts[k] + ' 次提交</span>' : '';
       var link = function(url, text){ return url ? '<a class="btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + text + '</a>' : '<a class="btn off" title="第四步自动查词接通后才会有">' + text + '（待生成）</a>'; };
