@@ -72,7 +72,7 @@
 
   <main class="wrap">
     <section class="hero"><h1>Unlock Level 5 R&amp;W · Unit 01 · Reading 2</h1><p>阅读文章查词与词组标记页面</p></section>
-    <section class="tip"><ol><li>短按一个英文词，可标记或取消标记。</li><li>按住约半秒后拖动，可连续选择词组。</li><li>点击“撤销”可取消最后一次有效标记；长按可连续撤销。</li><li>“清空”会删除本页当前学生的全部标记。</li><li>点击“提交”可预览并复制你的生词/短语列表。</li></ol></section>
+    <section class="tip"><ol><li>短按一个英文词，可标记或取消标记。</li><li>按住约半秒后拖动，可连续选择词组。</li><li>点击“撤销”可取消最后一次有效标记；长按可连续撤销。</li><li>“清空”会删除本页当前学生的全部标记。</li><li>点击“提交”可预览，然后“发送给老师”（推荐）或“复制生词列表”。</li></ol></section>
     <section id="content">
       <h2 class="section-title">Unit 01 · Conservation</h2>
       <div class="part-title">Reading 2</div>
@@ -97,10 +97,10 @@
     'use strict';
     const EXAM_CODE = 'Unlock_L5_RW_U01_R2';
     const PAPER = 'Unlock Level 5 R&W · Unit 01 · Reading 2';
-    const SB_URL = '';
-    const SB_ANON_KEY = '';
+    const SB_URL = 'https://br-cute-tahr-8eff7472.supabase.aidap-global.cn-beijing.volces.com';
+    const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1wbGF0Zm9ybSIsInJvbGUiOiJhbm9uIiwiZXhwIjozNjg2OTI1NzYzfQ.y45vSsbxFjV9k-psYujSR2YMtDOeZW_IDZS6eBlbRFc';
     const TASK_TYPE = 'Unlock_Level_5_R_W-标生词';
-    const SET_NUM = 5;
+    const SET_NUM = 12;
     const LONGPRESS_MS = 500, MOUSE_LONGPRESS_MS = 500, MOVE_TOLERANCE = 10;
     const marked = new Set(), history = [], idMap = Object.create(null);
     const $ = id => document.getElementById(id);
@@ -210,6 +210,32 @@
       $('copyBtn').disabled = !list.length; panel.hidden=false; renderReceipt();
     }
     $('submitBtn').addEventListener('click',renderPanel); $('closePanel').addEventListener('click',()=>{panel.hidden=true;});
+    function uuid() { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&3|8)).toString(16); }); }
+    function two(n) { return (n<10?'0':'')+n; }
+    function stamp() { const d=new Date(); return two(d.getMonth()+1)+two(d.getDate())+two(d.getHours())+two(d.getMinutes()); }
+    const sendBtn = document.createElement('button');
+    sendBtn.type = 'button'; sendBtn.className = 'btn primary'; sendBtn.id = 'sendBtn'; sendBtn.textContent = '发送给老师';
+    copyBtn.parentNode.insertBefore(sendBtn, copyBtn);
+    sendBtn.addEventListener('click', async () => {
+      const items = groups();
+      if (!items.length) { status.textContent = '还没有标记任何生词，先点几个词再发送。'; return; }
+      if (!initials) { status.textContent = '请先在页面顶部填写姓名缩写并点击"开始标记"。'; return; }
+      sendBtn.disabled = true; status.textContent = '正在发送……';
+      const name = initials + stamp();
+      const signature = items.map(g => g.text).join('|');
+      const row = { id: uuid(), student_name: name, task_type: TASK_TYPE, set_num: SET_NUM, status: 'submitted', total: items.length,
+        answers: { exam: PAPER, document_name: `${EXAM_CODE}_${name}`, count: items.length, items, page: location.pathname.split('/').pop() } };
+      try {
+        const r = await fetch(`${SB_URL}/rest/v1/rpc/student_save`, { method: 'POST', headers: { apikey: SB_ANON_KEY, Authorization: `Bearer ${SB_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ p: row }) });
+        if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+        safeSet(sentKey(), JSON.stringify({ signature, count: items.length }));
+        status.textContent = `已发送：${items.length} 处（编号 ${name}）`;
+      } catch (e) {
+        status.textContent = '⚠ 发送失败，请检查网络后再点一次，标记不会丢。';
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
     $('copyBtn').addEventListener('click', async () => {
       const text = `${fullName()}\n` + groups().map((g,i)=>`${i+1}. ${g.text}`).join('\n');
       try { await navigator.clipboard.writeText(text); } catch (_) { const area=document.createElement('textarea'); area.value=text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove(); }
