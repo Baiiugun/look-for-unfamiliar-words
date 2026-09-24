@@ -136,7 +136,7 @@
         const p = first && first.closest('p');
         const section = first && first.closest('#content')?.querySelector('.section-title')?.textContent.trim() || '';
         const part = first && first.closest('#content')?.querySelector('.part-title')?.textContent.trim() || '';
-        return { text: group.ids.map(id => idMap[id].textContent).join(' '), where: [section,part].filter(Boolean).join(' · '), context: (p ? p.textContent : '').replace(/\s+/g,' ').trim().slice(0,400), ids:[group.start,group.end] };
+        return { text: group.ids.map(id => idMap[id].textContent).join(' '), where: [section,part].filter(Boolean).join(' · '), context: (p ? p.textContent : '').replace(/\s+/g,' ').trim(), ids:[group.start,group.end] };
       });
     }
     function saveDraft() { if (!studentCode) return; safeSet(draftKey(), JSON.stringify([...marked].sort((a,b)=>a-b))); }
