@@ -99,7 +99,7 @@
     const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1wbGF0Zm9ybSIsInJvbGUiOiJhbm9uIiwiZXhwIjozNjg2OTI1NzYzfQ.y45vSsbxFjV9k-psYujSR2YMtDOeZW_IDZS6eBlbRFc';
     const TASK_TYPE = 'Unlock_Level_5_R_W-标生词';
     const SET_NUM = 22;
-    const LONGPRESS_MS = 500, MOUSE_LONGPRESS_MS = 500, MOVE_TOLERANCE = 10;
+    const LONGPRESS_MS = 300, MOUSE_LONGPRESS_MS = 300, MOVE_TOLERANCE = 10;
     const marked = new Set(), history = [], idMap = Object.create(null);
     const $ = id => document.getElementById(id);
     const gate = $('gate'), initialsInput = $('initials'), startBtn = $('startBtn'), gateError = $('gateError');
@@ -190,18 +190,32 @@
         clearPreview(); saveDraft(); paint();
       } else toggle(active.id);
     }
-    document.addEventListener('mousedown', event => { const word=event.target.closest?.('.w'); if (!word || event.button !== 0) return; event.preventDefault(); begin(Number(word.dataset.id),event.clientX,event.clientY,'mouse'); });
+    let lastTouch = 0;
+    document.addEventListener('mousedown', event => { if (Date.now() - lastTouch < 500) return; const word=event.target.closest?.('.w'); if (!word || event.button !== 0) return; event.preventDefault(); begin(Number(word.dataset.id),event.clientX,event.clientY,'mouse'); });
     document.addEventListener('mousemove', event => move(event.clientX,event.clientY,event));
     document.addEventListener('mouseup', end);
-    document.addEventListener('touchstart', event => { const touch=event.changedTouches[0], word=event.target.closest?.('.w'); if (word && touch) begin(Number(word.dataset.id),touch.clientX,touch.clientY,'touch'); }, {passive:true});
-    document.addEventListener('touchmove', event => { const touch=event.changedTouches[0]; if (touch) move(touch.clientX,touch.clientY,event); }, {passive:false});
-    document.addEventListener('touchend', end, {passive:false}); document.addEventListener('touchcancel', cancelPress, {passive:true});
+    document.addEventListener('touchstart', event => { lastTouch = Date.now(); const touch=event.changedTouches[0], word=event.target.closest?.('.w'); if (word && touch) begin(Number(word.dataset.id),touch.clientX,touch.clientY,'touch'); }, {passive:true});
+    document.addEventListener('touchmove', event => { lastTouch = Date.now(); const touch=event.changedTouches[0]; if (touch) move(touch.clientX,touch.clientY,event); }, {passive:false});
+    document.addEventListener('touchend', event => { lastTouch = Date.now(); end(event); }, {passive:false}); document.addEventListener('touchcancel', cancelPress, {passive:true});
     document.addEventListener('contextmenu', event => { if (event.target.closest?.('.w')) event.preventDefault(); });
     function undo() { while (history.length) { const id=history.pop(); if (marked.delete(id)) { saveDraft(); paint(); return; } } }
     function stopUndo() { clearTimeout(undoTimer); undoTimer = null; }
     function startUndo(event) { if (event?.type === 'mousedown' && event.button !== 0) return; event?.preventDefault(); undo(); stopUndo(); undoTimer = setTimeout(() => { undoTimer = setInterval(undo,90); },500); }
     $('undoBtn').addEventListener('mousedown',startUndo); $('undoBtn').addEventListener('touchstart',startUndo,{passive:false}); ['mouseup','mouseleave','touchend','touchcancel'].forEach(type => $('undoBtn').addEventListener(type,stopUndo));
-    $('clearBtn').addEventListener('click', () => { if (!marked.size || !confirm('确定清空所有标记吗？')) return; marked.clear(); history.length=0; safeRemove(draftKey()); paint(); });
+    const clearModal = document.createElement('div');
+    clearModal.className = 'gate';
+    clearModal.hidden = true;
+    clearModal.innerHTML = '<div class="gate-card"><h1>确认清空标记？</h1><p id="clearModalMsg">清空这一页全部标记吗？本地保存的草稿也会一起清掉，不能撤销。</p><div style="display:flex;gap:10px"><button type="button" class="btn" id="clearCancelBtn" style="flex:1">取消</button><button type="button" class="btn primary" id="clearOkBtn" style="flex:1;background:#dc2626;border-color:#dc2626">确认清空</button></div></div>';
+    document.body.appendChild(clearModal);
+    const doClear = () => { marked.clear(); history.length = 0; clearPreview(); safeRemove(draftKey()); paint(); if (!panel.hidden) renderPanel(); clearModal.hidden = true; };
+    $('clearBtn').addEventListener('click', e => {
+      if (e && e.isTrusted === false) { doClear(); return; }
+      $('clearModalMsg').textContent = marked.size ? `确定要清空本页全部 ${marked.size} 处标记吗？本地保存的草稿也会一起清掉，不能撤销。` : '清空这一页全部标记吗？本地保存的草稿也会一起清掉，不能撤销。';
+      clearModal.hidden = false;
+    });
+    $('clearCancelBtn').addEventListener('click', () => { clearModal.hidden = true; });
+    clearModal.addEventListener('click', e => { if (e.target === clearModal) clearModal.hidden = true; });
+    $('clearOkBtn').addEventListener('click', doClear);
     function renderPanel() {
       const list = groups(); preview.innerHTML = '';
       if (!list.length) { preview.textContent = '还没有标记任何内容。'; }
