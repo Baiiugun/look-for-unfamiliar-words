@@ -109,7 +109,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
       <select id="fStu"><option value="">全部学生</option></select>
       <select id="fTask"><option value="">全部考试 / 文本</option></select>
       <select id="fYear"><option value="">全部试卷</option></select>
-      <label><input type="checkbox" id="fLatest" checked> 每人每套只看最新一份</label>
+      <label title="可选筛选；默认按提交时间显示每一次查词记录"><input type="checkbox" id="fLatest"> 只看每人每套最新一次</label>
       <label class="tz">显示时间 <select id="fTZ" aria-label="选择提交时间的显示时区"></select></label>
       <span class="summary" id="summary"></span>
     </div>
@@ -257,8 +257,9 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   function items(r){ return (r.answers && r.answers.items) || []; }
   function files(r){ return (r.grading && r.grading.files) || {}; }
 
-  /* 学生编号从 2026-09-23 起是「缩写+月日时分」，每交一次都不同。分组只认字母缩写，
-     否则同一个人每交一次就多出一个“学生”，「只看最新一份」也会失效。卡片上仍显示完整编号。 */
+  /* 学生编号从 2026-09-23 起是「缩写+月日时分」，每交一次都不同。默认逐次显示，
+     并按提交时间排列；只有老师主动勾选“只看最新”时才临时隐藏较早记录。
+     分组只认字母缩写，卡片上仍显示每次提交的完整编号。 */
   function stuOf(r){ var m = String(r.student_name || '').match(/^[A-Za-z]+/); return m ? m[0].toUpperCase() : String(r.student_name || ''); }
   function visible(){
     var stu = $('fStu').value, task = $('fTask').value, yr = $('fYear').value, latest = $('fLatest').checked;
