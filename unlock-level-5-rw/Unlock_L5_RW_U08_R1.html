@@ -155,7 +155,7 @@
       if (!studentCode) return;
       const raw = safeGet(sentKey());
       if (!raw) { status.textContent = SB_URL && SB_ANON_KEY ? '预览后可发送给老师。' : '本页可离线使用，复制列表后交给老师。'; return; }
-      try { const item = JSON.parse(raw), signature = groups().map(g=>g.text).join('|'); status.textContent = item.signature === signature ? `已发送：${item.count} 处` : '已有发送记录；修改后如需提交，请重新发送。'; } catch (_) { status.textContent = ''; }
+      try { const item = JSON.parse(raw), signature = groups().map(g=>g.text).join('|'); status.textContent = item.signature === signature ? `已发送：${item.count} 处` : '上一批已发送；当前标记将作为下一次独立提交。'; } catch (_) { status.textContent = ''; }
     }
     function loadDraft() {
       marked.clear(); history.length = 0;
@@ -232,7 +232,8 @@
         const r = await fetch(`${SB_URL}/rest/v1/rpc/student_save`, { method: 'POST', headers: { apikey: SB_ANON_KEY, Authorization: `Bearer ${SB_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ p: row }) });
         if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
         safeSet(sentKey(), JSON.stringify({ signature, count: items.length }));
-        status.textContent = `已发送：${items.length} 处（编号 ${name}）`;
+        marked.clear(); history.length = 0; safeRemove(draftKey()); paint();
+        status.textContent = `已发送：${items.length} 处（编号 ${name}）。本批标记已清空，下一次查词将建立新记录。`;
       } catch (e) {
         status.textContent = '⚠ 发送失败，请检查网络后再点一次，标记不会丢。';
       } finally {
