@@ -47,6 +47,7 @@ header h1 small{font-weight:500;color:var(--muted);font-size:13px;margin-left:6p
 .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 12px;font-size:13.5px}
 .filters select{padding:6px 9px;border:1px solid var(--border);border-radius:8px;background:#fff}
 .filters label{display:flex;align-items:center;gap:5px;color:var(--muted)}
+.filters .tz select{max-width:250px;color:var(--ink)}
 .summary{font-size:13px;color:var(--muted);margin-left:auto}
 
 .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:0 0 10px;overflow:hidden}
@@ -107,6 +108,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
       <select id="fTask"><option value="">全部考试 / 文本</option></select>
       <select id="fYear"><option value="">全部试卷</option></select>
       <label><input type="checkbox" id="fLatest" checked> 每人每套只看最新一份</label>
+      <label class="tz">显示时间 <select id="fTZ" aria-label="选择提交时间的显示时区"></select></label>
       <span class="summary" id="summary"></span>
     </div>
     <div id="list"></div>
@@ -121,14 +123,66 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
   var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1wbGF0Zm9ybSIsInJvbGUiOiJhbm9uIiwiZXhwIjozNjg2OTI1NzYzfQ.y45vSsbxFjV9k-psYujSR2YMtDOeZW_IDZS6eBlbRFc';
   var TASK_SUFFIX = '标生词';
   var TEACHER_EMAIL = 'baiyuguang@gmail.com';
-  var RT_KEY = 'kyvocab_rt', SEEN_KEY = 'kyvocab_seen';
+  var RT_KEY = 'kyvocab_rt', SEEN_KEY = 'kyvocab_seen', TZ_KEY = 'kyvocab_timezone';
+  var BROWSER_TZ = (function(){
+    try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
+    catch(e){ return 'UTC'; }
+  })();
 
   var $ = function(id){ return document.getElementById(id); };
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k, v){ try{ if(v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function toast(t){ var el = $('toast'); el.textContent = t; el.style.display = 'block'; clearTimeout(toast._h); toast._h = setTimeout(function(){ el.style.display = 'none'; }, 2200); }
-  function fmt(iso){ var d = new Date(iso); return (d.getMonth()+1) + '月' + d.getDate() + '日 ' + d.toTimeString().slice(0,5); }
+  function selectedTZ(){ return $('fTZ') && $('fTZ').value ? $('fTZ').value : 'local'; }
+  function tzName(tz){
+    var names = {
+      UTC:'UTC', 'Asia/Shanghai':'北京/中国', 'America/Los_Angeles':'洛杉矶',
+      'America/New_York':'纽约', 'Europe/London':'伦敦', 'Europe/Paris':'巴黎',
+      'Asia/Tokyo':'东京', 'Asia/Singapore':'新加坡', 'Australia/Sydney':'悉尼'
+    };
+    if(tz === 'local') return '我的电脑 · ' + BROWSER_TZ;
+    return (names[tz] ? names[tz] + ' · ' : '') + tz;
+  }
+  function fmt(iso){
+    var d = new Date(iso), tz = selectedTZ(), opt = {
+      month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false
+    };
+    if(tz !== 'local') opt.timeZone = tz;
+    try{
+      var p = {}, parts = new Intl.DateTimeFormat('zh-CN', opt).formatToParts(d);
+      parts.forEach(function(x){ if(x.type !== 'literal') p[x.type] = x.value; });
+      return Number(p.month) + '月' + Number(p.day) + '日 ' + p.hour + ':' + p.minute + '（' + tzName(tz) + '）';
+    }catch(e){
+      return d.toISOString().slice(0,16).replace('T',' ') + '（UTC）';
+    }
+  }
+  function initTimeZones(){
+    var sel = $('fTZ'), common = [
+      ['local', '我的电脑（' + BROWSER_TZ + '）'],
+      ['Asia/Shanghai', '北京/中国（Asia/Shanghai）'],
+      ['America/Los_Angeles', '洛杉矶（America/Los_Angeles）'],
+      ['America/New_York', '纽约（America/New_York）'],
+      ['Europe/London', '伦敦（Europe/London）'],
+      ['UTC', '协调世界时（UTC）'],
+      ['Europe/Paris', '巴黎（Europe/Paris）'],
+      ['Asia/Tokyo', '东京（Asia/Tokyo）'],
+      ['Asia/Singapore', '新加坡（Asia/Singapore）'],
+      ['Australia/Sydney', '悉尼（Australia/Sydney）']
+    ];
+    var all = [];
+    try{ if(Intl.supportedValuesOf) all = Intl.supportedValuesOf('timeZone'); }catch(e){}
+    var used = new Set(common.map(function(x){ return x[0]; }));
+    function option(parent, value, label){ var o = document.createElement('option'); o.value = value; o.textContent = label; parent.appendChild(o); }
+    var quick = document.createElement('optgroup'); quick.label = '常用时区'; sel.appendChild(quick);
+    common.forEach(function(x){ option(quick, x[0], x[1]); });
+    if(all.length){
+      var every = document.createElement('optgroup'); every.label = '全部国际时区'; sel.appendChild(every);
+      all.filter(function(tz){ return !used.has(tz); }).forEach(function(tz){ option(every, tz, tz); });
+    }
+    var saved = lsGet(TZ_KEY);
+    sel.value = saved && Array.prototype.some.call(sel.options, function(o){ return o.value === saved; }) ? saved : 'local';
+  }
 
   /* ---------- 登录（Supabase Auth，直接用 REST 接口） ---------- */
   var token = null, tokenExp = 0;
@@ -256,7 +310,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
         '<div class="row">' +
           '<div class="who"><b>' + esc(r.student_name) + '</b><span class="chip year">' + esc(r.task_type) + ' · ' + esc(r.set_num) + '</span>' +
             (isNew ? '<span class="chip new">新</span>' : '') + nth +
-            '<div class="meta">' + fmt(r.updated_at) + ' 提交</div></div>' +
+            '<div class="meta" title="UTC：' + esc(new Date(r.updated_at).toISOString()) + '">' + esc(fmt(r.updated_at)) + ' 提交</div></div>' +
           '<div class="n">' + its.length + ' <small>条</small></div>' +
           '<div class="acts">' +
             '<button class="btn" data-act="view">' + (openIds.has(r.id) ? '收起' : '查看') + '</button>' +
@@ -321,6 +375,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
     }
   });
   ['fStu','fTask','fYear','fLatest'].forEach(function(id){ $(id).addEventListener('change', render); });
+  $('fTZ').addEventListener('change', function(){ lsSet(TZ_KEY, this.value); render(); });
   $('reloadBtn').onclick = function(){ load(false); };
 
   // 离开页面时记下"已看到这里"，下次打开时之后新交的会标「新」
@@ -336,6 +391,7 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
     timer = setInterval(function(){ if(document.visibilityState === 'visible') load(true); }, 30000);
   }
 
+  initTimeZones();
   if(lsGet(RT_KEY)) start(); else showLogin();
 })();
 </script>
