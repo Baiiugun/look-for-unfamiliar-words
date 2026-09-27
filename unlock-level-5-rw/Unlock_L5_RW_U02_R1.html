@@ -128,11 +128,12 @@
         const change = document.createElement('button'); change.type = 'button'; change.textContent = '换人'; change.addEventListener('click', changeStudent); who.append(change);
       }
     }
+    function contextBox(el) { return el && (el.closest('p,.stem,.opt,.subitem,td,li,h2,h3,h4') || el.parentElement); }
     function groups() {
       const ids = [...marked].sort((a,b) => a-b), result = [];
       for (const id of ids) {
         const last = result[result.length - 1];
-        if (last && id === last.end + 1) { last.end = id; last.ids.push(id); }
+        if (last && id === last.end + 1 && contextBox(idMap[id]) === contextBox(idMap[last.end])) { last.end = id; last.ids.push(id); }
         else result.push({ start:id, end:id, ids:[id] });
       }
       return result.map(group => {

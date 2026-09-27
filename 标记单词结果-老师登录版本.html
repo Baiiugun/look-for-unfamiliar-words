@@ -59,6 +59,8 @@ header h1 small{font-weight:500;color:var(--muted);font-size:13px;margin-left:6p
 .chip.year{background:var(--accent-bg);color:var(--accent-ink)}
 .chip.new{background:#fee2e2;color:#b91c1c}
 .chip.old{background:#f1f2f5;color:var(--muted);font-weight:600}
+.chip.fail{background:var(--danger-bg);color:var(--danger)}
+.lookup-error{font-size:12px;color:var(--danger);margin-top:2px;max-width:620px;line-height:1.45}
 .n{font-weight:800;font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
 .n small{font-weight:500;color:var(--muted);font-size:12px}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
@@ -302,15 +304,22 @@ td.src{color:var(--muted);font-size:12px;white-space:nowrap}
       return;
     }
     $('list').innerHTML = list.map(function(r){
-      var its = items(r), f = files(r), k = stuOf(r) + '|' + r.task_type + '|' + r.set_num;
+      var its = items(r), f = files(r), lookup = (r.grading && r.grading.lookup) || {}, k = stuOf(r) + '|' + r.task_type + '|' + r.set_num;
       var isNew = seenAt && r.updated_at > seenAt;
       var nth = counts[k] > 1 ? '<span class="chip old">第 ' + order[r.id] + '/' + counts[k] + ' 次提交</span>' : '';
-      var link = function(url, text){ return url ? '<a class="btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + text + '</a>' : '<a class="btn off" title="第四步自动查词接通后才会有">' + text + '（待生成）</a>'; };
+      var failed = lookup.status === 'failed', retrying = failed && lookup.retryable !== false;
+      var failChip = failed ? '<span class="chip fail">' + (retrying ? '自动重试中' : '生成失败') + '</span>' : '';
+      var failLine = failed ? '<div class="lookup-error">⚠ ' + esc(lookup.error || '生成过程发生错误') + (retrying && lookup.next_retry_at ? '；预计重试：' + esc(fmt(lookup.next_retry_at)) : '') + '</div>' : '';
+      var link = function(url, text){
+        if(url) return '<a class="btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + text + '</a>';
+        if(failed) return '<a class="btn off" title="' + esc(lookup.error || '生成失败') + '">' + text + '（' + (retrying ? '重试中' : '失败') + '）</a>';
+        return '<a class="btn off" title="云端正在处理这份提交">' + text + '（待生成）</a>';
+      };
       return '<div class="card' + (openIds.has(r.id) ? ' open' : '') + '" data-id="' + esc(r.id) + '">' +
         '<div class="row">' +
           '<div class="who"><b>' + esc(r.student_name) + '</b><span class="chip year">' + esc(r.task_type) + ' · ' + esc(r.set_num) + '</span>' +
-            (isNew ? '<span class="chip new">新</span>' : '') + nth +
-            '<div class="meta" title="UTC：' + esc(new Date(r.updated_at).toISOString()) + '">' + esc(fmt(r.updated_at)) + ' 提交</div></div>' +
+            (isNew ? '<span class="chip new">新</span>' : '') + nth + failChip +
+            '<div class="meta" title="UTC：' + esc(new Date(r.updated_at).toISOString()) + '">' + esc(fmt(r.updated_at)) + ' 提交</div>' + failLine + '</div>' +
           '<div class="n">' + its.length + ' <small>条</small></div>' +
           '<div class="acts">' +
             '<button class="btn" data-act="view">' + (openIds.has(r.id) ? '收起' : '查看') + '</button>' +
